@@ -62,6 +62,6 @@ class _ShaderBuilderState extends State<ShaderBuilder> {
     if (!mounted) return;
     final shader = program.fragmentShader();
     _shader = widget.xShaderBuilder(shader);
-    setState(() {});
+    if (mounted) setState(() {});
   }
 }
