@@ -18,3 +18,7 @@
 ## 0.0.8
 
 * Fixed the issue with negative opacity while animating ([#8](https://github.com/ArkhipenkaPiotr/thanos_snap_effect/issues/8))
+
+## 0.0.9
+
+* Fixed the issue with unmounted state after shader initialization
