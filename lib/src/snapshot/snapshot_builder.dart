@@ -34,9 +34,14 @@ class SnapshotBuilder extends StatefulWidget {
   /// The child widget, which snapshot should be taken
   final Widget child;
 
+  /// 部分情况下，child 需要稍微等待后才能显示有效图像供动画使用
+  /// 如本地图片加载，若内存没有缓存，需要小幅度等待
+  final Duration? delayCapture;
+
   /// Creates a SnapshotBuilder widget
   const SnapshotBuilder({
     super.key,
+    this.delayCapture,
     required this.animation,
     required this.builder,
     required this.onSnapshotReadyListener,
@@ -115,6 +120,9 @@ class _SnapshotBuilderState extends State<SnapshotBuilder> {
   }
 
   Future<SnapshotInfo?> _capture() async {
+    if (null != widget.delayCapture) {
+      await Future.delayed(widget.delayCapture!);
+    }
     final completer = Completer<SnapshotInfo?>();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
       RenderRepaintBoundary? boundary = _containerKey.currentContext

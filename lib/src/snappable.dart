@@ -36,11 +36,14 @@ class Snappable extends StatefulWidget {
   /// The style properties of the shader effect
   final SnappableStyle style;
 
+  final Duration? delayCapture;
+
   /// Creates a Snappable widget
   const Snappable({
     super.key,
     required this.child,
     required this.animation,
+    this.delayCapture,
     this.outerPadding = const EdgeInsets.all(40),
     this.style = const SnappableStyle(),
   });
@@ -50,7 +53,7 @@ class Snappable extends StatefulWidget {
 }
 
 class _SnappableState extends State<Snappable> {
-  final _overlayController = OverlayPortalController();
+  final _overlayController = OverlayPortalController()..show();
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +63,7 @@ class _SnappableState extends State<Snappable> {
       builder: (context, shader, child) {
         return SnapshotBuilder(
           animation: widget.animation,
+          delayCapture: widget.delayCapture,
           onSnapshotReadyListener: (snapshotInfo) {
             shader?.updateSnapshot(snapshotInfo);
             shader?.updateStyleProperties(
@@ -80,8 +84,6 @@ class _SnappableState extends State<Snappable> {
                 return Positioned(
                   left: snapshotInfo.position.dx,
                   top: snapshotInfo.position.dy,
-                  width: snapshotInfo.width,
-                  height: snapshotInfo.height,
                   child: SizedBox(
                     width: snapshotInfo.width,
                     height: snapshotInfo.height,
@@ -89,6 +91,9 @@ class _SnappableState extends State<Snappable> {
                       animation: widget.animation,
                       builder: (context, snapshot) {
                         shader.setAnimationValue(widget.animation.value);
+                        if (1 == widget.animation.value) {
+                          return const SizedBox.shrink();
+                        }
                         return ShaderPainter(
                           shader: shader.fragmentShader,
                           outerPadding: widget.outerPadding,
@@ -103,7 +108,7 @@ class _SnappableState extends State<Snappable> {
                 maintainState: true,
                 maintainSize: true,
                 maintainAnimation: true,
-                visible: widget.animation.value == 0 || snapshotInfo == null,
+                visible: (widget.animation.value == 0 || snapshotInfo == null),
                 child: child,
               ),
             );
