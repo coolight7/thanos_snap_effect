@@ -88,13 +88,19 @@ class _SnapshotBuilderState extends State<SnapshotBuilder> {
   @override
   void dispose() {
     widget.animation.removeListener(_onAnimationChanged);
+    _disposeSnapshot();
     super.dispose();
+  }
+
+  void _disposeSnapshot() {
+    _currentSnapshotInfo?.image.dispose();
+    _currentSnapshotInfo = null;
   }
 
   void _onAnimationChanged() {
     if (widget.animation.value == 0) {
       _snapshotDirty = true;
-      _currentSnapshotInfo = null;
+      _disposeSnapshot();
       setState(() {});
       return;
     }
@@ -108,10 +114,12 @@ class _SnapshotBuilderState extends State<SnapshotBuilder> {
         }
         _snapshotInProgress = false;
         _snapshotDirty = false;
+        final oldSnapshot = _currentSnapshotInfo;
         widget.onSnapshotReadyListener(snapshotInfo);
         setState(() {
           _currentSnapshotInfo = snapshotInfo;
         });
+        oldSnapshot?.image.dispose();
       }).catchError((error) {
         _snapshotInProgress = false;
         _snapshotDirty = true;
