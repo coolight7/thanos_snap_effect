@@ -220,6 +220,10 @@ class _ParticleImageTransitionState extends State<ParticleImageTransition>
     // previousOld.image is still alive. Disposing first would feed a dead
     // image to the shader and crash with "Image has been disposed".
     _shader!.updateOldSnapshot(_oldSnapshot!);
+    // Reset the shader's animation value to 0 so that during the restart
+    // capture phase (static CustomPaint), the shader renders the old texture
+    // fully instead of a stale mid-transition blend that flashes the new image.
+    _shader!.setAnimationValue(0);
     previousOld?.image.dispose();
     // Invalidate any in-flight capture from the previous transition: its
     // result would reference an outdated child and could clobber these
@@ -460,6 +464,10 @@ class _ParticleImageTransitionState extends State<ParticleImageTransition>
     // can proceed.
     if (_animating && _oldSnapshot != null) {
       final oldSnap = _oldSnapshot!;
+      // Ensure the shader renders at value 0 (fully old texture). This is a
+      // defensive guard: _restartMidAnimation already resets the value, but if
+      // any intermediate frame callback touched it, this keeps the display stable.
+      shader!.setAnimationValue(0);
       return Stack(
         clipBehavior: Clip.none,
         children: [
@@ -475,7 +483,7 @@ class _ParticleImageTransitionState extends State<ParticleImageTransition>
             child: IgnorePointer(
               child: CustomPaint(
                 painter: _ParticlePainter(
-                  shader: shader!.fragmentShader,
+                  shader: shader.fragmentShader,
                   outerPadding: widget.outerPadding,
                   animationValue: 0,
                 ),
@@ -509,6 +517,11 @@ class _ParticlePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Set the shader's animation value here so the painter is self-contained.
+    // This guarantees the correct frame is rendered even when used in a static
+    // CustomPaint (e.g. the restart capture phase) where no AnimatedBuilder
+    // drives the value externally.
+    shader.setFloat(0, animationValue);
     final paint = Paint()..shader = shader;
     canvas.drawRect(
       Rect.fromLTWH(
