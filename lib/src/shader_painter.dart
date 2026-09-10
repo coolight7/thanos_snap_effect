@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Helper widget to paint a shader
 /// This widget utilizes the CustomPaint widget to paint the shader

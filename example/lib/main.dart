@@ -1,7 +1,7 @@
 import 'package:example/animated_list_example_screen.dart';
 import 'package:example/animation_controller_example_screen.dart';
 import 'package:example/menu_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   runApp(const MyApp());

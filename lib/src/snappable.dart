@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:thanos_snap_effect/src/shader_builder.dart';
 import 'package:thanos_snap_effect/src/shader_painter.dart';
 import 'package:thanos_snap_effect/src/shader_x/thanos_effect_shader.dart';

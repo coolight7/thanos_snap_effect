@@ -1,5 +1,5 @@
 import 'package:example/random_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:thanos_snap_effect/thanos_snap_effect.dart';
 
 class AnimationControllerExampleScreen extends StatefulWidget {

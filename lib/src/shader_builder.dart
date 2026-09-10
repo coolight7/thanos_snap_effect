@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:thanos_snap_effect/src/shader_x/shader_x.dart';
 
 /// Helper widget to build a shader and provide it to the child widget

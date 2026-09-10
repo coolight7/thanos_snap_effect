@@ -1,6 +1,6 @@
 import 'package:example/animated_list_example_screen.dart';
 import 'package:example/animation_controller_example_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({super.key});
